@@ -1,6 +1,6 @@
 export * from "./ipg"
 export * from "./auth"
 export * from "./remove-req.dto"
-export * from "./Meta.dto"
+export * from "./Base.dto"
 export * from "./pagination-req.dto"
 export * from "./pagination-res.dto"

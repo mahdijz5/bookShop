@@ -1,40 +1,82 @@
 version: '3.8'
 services:
-  reservation2:
-    build:
-      context: .
-      dockerfile: Dockerfile
-      target: prod
-      args:
-        - APP_NAME=reservation
-        - NODE_ENV=prod
-    # env_file:
-    #   - ./apps/reservation/.env
-    ports:
-      - '3000:3000'
-    volumes:
-      - .:/usr/src/app
-    # command: npm run start:prod
-
-  mongo:
-    image: mongo
-    ports:
-      - "27017:27017"
-    volumes:
-      - ./data/mongo_data:/data/db
-
-  rabbitmq:
-    image: rabbitmq:3-management
-    container_name: rabbitmq
-    hostname: rabbitmq
-    ports:
-        - 5672:5672
-        - 15672:15672
-    volumes:
-        - ./data/rabbitmq_data:/var/lib/rabbitmq
-    environment:
-        RABBITMQ_DEFAULT_USER: ${RABBITMQ_DEFAULT_USER}
-        RABBITMQ_DEFAULT_PASS: ${RABBITMQ_DEFAULT_PASS}
-    env_file:
-        - .env
  
+
+    mongodb-primary:
+        ports:
+            - "27017:27017"
+        image: docker.io/bitnami/mongodb:7.0
+        environment:
+          - MONGODB_ADVERTISED_HOSTNAME=mongodb-primary
+          - MONGODB_ROOT_PASSWORD=password123
+        #   - MONGODB_REPLICA_SET_MODE=primary
+        #   - MONGODB_REPLICA_SET_KEY=replicasetkey123
+        volumes:
+          - 'mongo_vol:/bitnami/mongodb'
+        networks: 
+            - net
+
+    # mongodb-secondary:
+    #     image: docker.io/bitnami/mongodb:7.0
+    #     depends_on:
+    #       - mongodb-primary
+    #     environment:
+    #       - MONGODB_ADVERTISED_HOSTNAME=mongodb-secondary
+    #     #   - MONGODB_REPLICA_SET_MODE=secondary
+    #       - MONGODB_INITIAL_PRIMARY_HOST=mongodb-primary
+    #       - MONGODB_INITIAL_PRIMARY_ROOT_PASSWORD=password123
+    #     #   - MONGODB_REPLICA_SET_KEY=replicasetkey123
+    #     networks: 
+    #         - net
+            
+     
+
+    rabbitmq:
+        image: rabbitmq:3-management
+        container_name: rabbitmq
+        hostname: rabbitmq
+        ports:
+            - 5672:5672
+            - 15672:15672
+        volumes:
+            - ./data/rabbitmq_data:/var/lib/rabbitmq
+        environment:
+            RABBITMQ_DEFAULT_USER: ${RABBITMQ_DEFAULT_USER}
+            RABBITMQ_DEFAULT_PASS: ${RABBITMQ_DEFAULT_PASS}
+        env_file:
+            - .env
+        networks:
+            - net
+
+    redis:
+        image: bitnami/redis:7.0
+        container_name: redis
+        hostname: redis
+        ports:
+            - 6379:6379
+        environment:
+            ALLOW_EMPTY_PASSWORD: yes
+            REDIS_DISABLE_COMMANDS: FLUSHDB,FLUSHALL
+        env_file:
+            - .env
+        networks:
+            - net
+
+    # mongo-express:
+    #     image: mongo-express
+    #     container_name: mongo-express
+    #     hostname: mongo-express
+    #     ports:
+    #         - 47004:8081
+    #     env_file:
+    #         - .env
+    #     networks:
+    #         - net
+
+networks:
+    net:
+        driver: bridge
+        attachable: true
+volumes:
+    mongo_vol:
+        driver: local

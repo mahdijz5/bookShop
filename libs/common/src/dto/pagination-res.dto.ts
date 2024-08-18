@@ -1,4 +1,4 @@
-import { MetaDto } from "./Meta.dto"
+import { MetaDto } from "./Base.dto"
 
 export class PaginationResDto  {
     data: any[]

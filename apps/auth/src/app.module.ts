@@ -20,16 +20,8 @@ import { JWTStrategy } from './strategies';
         TCP_PORT: Joi.number().required(),
       })
     }),
-    JwtModule.registerAsync({
-      useFactory: (configService: ConfigService) => ({
-        secret: "test",
-        signOptions: {
-          expiresIn: `${configService.get("JWT_EXPIRATION")}`
-        }
-      }),
-      inject: [ConfigService]
-    }),
-    RmqModule
+    RmqModule,
+    AuthModule
   ],
   controllers: [],
   providers: [JWTStrategy],

@@ -1,7 +1,6 @@
 
 export class LoginReqDto {
-    username?: string;
-    email?: string;
+    username: string;
     password: string;
 }
 export class LoginResDto {
