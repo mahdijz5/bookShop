@@ -5,35 +5,35 @@ import { ClientProxy } from '@nestjs/microservices';
 import { IPG_SERVICE, MESSAGE_PATTERN, REQUEST_TIMEOUT } from '@app/common';
 import { CreateIpgReqDto, CreatePaymentReqDto, PaginationReqDto, RemoveReqDto, UpdateIpgReqDto } from '@app/common/dto';
 import { timeout } from 'rxjs';
-import { FindAllReqDto } from '../common/dto';
 import { CreatePaymentRDto } from './dto/create-payment.dto';
+import { FindAllReqDto } from '../../common/dto';
 
 @ApiTags('Ipg')
-@Controller({ path: 'ipg', version: '1' }) 
+@Controller({ path: 'ipg', version: '1' })
 export class IpgController {
     constructor(@Inject(IPG_SERVICE) private readonly ipgClient: ClientProxy) { }
- 
 
-    @HttpCode(HttpStatus.CREATED) 
+
+    @HttpCode(HttpStatus.CREATED)
     @Post()
     create(@Body() createIpg: CreateIpgDto) {
 
         return this.ipgClient
-            .send<void, CreateIpgReqDto>(MESSAGE_PATTERN.IPG.CREATE, { 
+            .send<void, CreateIpgReqDto>(MESSAGE_PATTERN.IPG.CREATE, {
                 ...createIpg
             })
             .pipe(timeout(REQUEST_TIMEOUT));
-    }  
- 
+    }
+
     @HttpCode(HttpStatus.OK)
     @Patch('/:id')
     update(@Body() createIpg: UpdateIpgDto, @Param("id") id: string) {
-        return this.ipgClient 
+        return this.ipgClient
             .send<void, UpdateIpgReqDto>(MESSAGE_PATTERN.IPG.UPDATE, {
                 ...createIpg,
                 id
-            }) 
-            .pipe(timeout(REQUEST_TIMEOUT));  
+            })
+            .pipe(timeout(REQUEST_TIMEOUT));
     }
 
     @HttpCode(HttpStatus.OK)
@@ -75,7 +75,7 @@ export class IpgController {
             .send<void, any>(MESSAGE_PATTERN.IPG.FINDALL_JSON, {
 
             })
-            .pipe(timeout(REQUEST_TIMEOUT)); 
+            .pipe(timeout(REQUEST_TIMEOUT));
     }
 
     @HttpCode(HttpStatus.CREATED)

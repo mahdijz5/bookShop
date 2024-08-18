@@ -2,7 +2,7 @@ version: '3.8'
 services:
  
 
-    mongodb-primary:
+    mongodb-primary: 
         ports:
             - "27017:27017"
         image: docker.io/bitnami/mongodb:7.0

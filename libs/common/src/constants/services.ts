@@ -1,4 +1,4 @@
-export const AUTH_SERVICE = "AUTH_SERVice"
+export const AUTH_SERVICE = "AUTH_SERVICE"
 export const IPG_SERVICE = "IPG_SERVICE"
 export const MAIL_SERVICE = "MAIL_SERVICE"
 export const PACKAGE_SERVICE = "PACKAGE_SERVICE"

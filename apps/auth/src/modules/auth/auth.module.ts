@@ -19,6 +19,8 @@ import {
     ResetPasswordTempRepository,
 } from './repositories';
 import { RmqModule } from '@app/common/rmq';
+import { AuthController } from './auth.controller';
+import { DatabaseModule } from '@app/common';
 
 @Module({
     imports: [
@@ -30,7 +32,7 @@ import { RmqModule } from '@app/common/rmq';
             }),
             inject: [ConfigService],
         }),
-        MongooseModule.forFeature([
+        DatabaseModule.forFeature([
             { name: Auth.name, schema: AuthSchema },
             { name: EmailVerificationTemp.name, schema: EmailVerificationTempSchema },
             { name: ResetPasswordTemp.name, schema: ResetPasswordTempSchema },
@@ -44,7 +46,7 @@ import { RmqModule } from '@app/common/rmq';
         EmailVerificationTempRepository,
         ResetPasswordTempRepository,
     ],
-    controllers: [],
+    controllers: [AuthController],
     exports: [AuthService]
 })
 export class AuthModule { }

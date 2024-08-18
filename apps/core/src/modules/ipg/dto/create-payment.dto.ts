@@ -1,4 +1,4 @@
-import { ApiCustomeProperty } from "@app/common"
+ import { ApiCustomeProperty } from "apps/core/src/common/decorators"
 import { IsCreditCard, IsEmail } from "class-validator"
 
 export class CreatePaymentRDto {

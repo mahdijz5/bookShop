@@ -22,7 +22,7 @@ import { lastValueFrom } from 'rxjs';
 @Injectable()
 export class AuthService {
     private readonly logger: Logger = new Logger(AuthService.name);
-
+ 
     constructor(
         private readonly configService: ConfigService,
         private readonly jwtService: JwtService,
@@ -103,8 +103,7 @@ export class AuthService {
             authId,
         });
 
-        let verifyEmailURL = callbackUrl || this.configService.getOrThrow('VERIFY_EMAIL_URL')
-        const token = `${verifyEmailURL}${code}`;
+        const token = `${code}`;
         const expire = moment().add(VERIFICATION_TEMP_EXPIRE_TIME, 'seconds').toDate();
         this.mailClient.emit<void, mailDtos.EmailVerificationDto>('email-verification', {
             email,
@@ -144,30 +143,7 @@ export class AuthService {
         });
         return { token, expire }
     }
-
-    private async handleForgotPasswordOTP(
-        authId: Types.ObjectId,
-        fp: string,
-        ip: string,
-        // eslint-disable-next-line @typescript-eslint/no-unused-vars
-        phone: string,
-    ) {
-        const hash = genRandomString();
-        const code = genRandomNum();
-
-        await this.resetPasswordTempRepository.save({
-            authId,
-            fp,
-            ip,
-            hash,
-            code,
-        });
-
-        // Send OTP SMS
-
-        return hash;
-    }
-
+ 
     private async signToken(data: Record<string, string>) {
         const key = genRandomString();
         await this.cacheService.setObj(key, data, JWT_EXPIRE);
@@ -181,9 +157,9 @@ export class AuthService {
     async emailPreRegister(fp: string, ip: string, email: string, callbackUrl?: string): Promise<{ code: string }> {
         try {
             let auth = await this.authRepository.findOne({ email }, {})
-
+            console.log(auth)
             const date = moment().toDate()
-            if (auth) {
+            if (auth) {  
                 if (moment(date).diff(auth?.resendDate || date, "seconds") <= 30) {
                     throw new BadRequestException(ERROR.VERIFICATION_CODE_NOT_EXPIRED)
                 }
@@ -193,7 +169,7 @@ export class AuthService {
                 auth = await this.authRepository.save({ ip, email });
             } else if (auth && auth.password && auth.username) {
                 throw new BadRequestException(ERROR.ALREADY_EXISTS)
-            }
+            } 
 
 
             await this.authRepository.updateOne({ _id: auth._id }, { resendDate: date })
@@ -251,7 +227,7 @@ export class AuthService {
 
 
 
-            const token = await this.signToken({ userId: auth._id.toString(), isTemp: "true" });
+            const token = await this.signToken({ userId: auth._id.toString() });
 
             return {
                 token,
@@ -273,7 +249,7 @@ export class AuthService {
         phone?: string,
     ) {
         try {
-
+            console.log(id)
             const auth = await this.authRepository.findOne({
                 _id: new Types.ObjectId(id),
             });
@@ -293,8 +269,8 @@ export class AuthService {
             auth.password = await hashPassword(password);
 
             await auth.save();
- 
-            const loginRes = await this.login(username,  password )
+
+            const loginRes = await this.login(username, password)
 
             return {
                 email: auth.email,
@@ -310,7 +286,7 @@ export class AuthService {
     async login(username: string, password: string) {
         try {
 
- 
+
             const auth = await this.authRepository.findOne({
                 $and: [
                     { username },

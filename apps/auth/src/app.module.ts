@@ -5,6 +5,11 @@ import * as Joi from 'joi';
 import { LoggerModule } from '@app/common/logger';
 import { RmqModule } from '@app/common/rmq';
 import { JWTStrategy } from './strategies';
+import { AuthModule } from './modules/auth/auth.module';
+import { DatabaseModule } from '@app/common';
+import { Auth, AuthSchema } from './modules/auth/schemas';
+import { AuthRepository } from './modules/auth/repositories';
+import { CacheModule } from '@app/common/cache';
 
 @Module({
   imports: [
@@ -12,18 +17,22 @@ import { JWTStrategy } from './strategies';
     ConfigModule.forRoot({
       isGlobal: true,
       envFilePath: "apps/auth/.env",
-      validationSchema: Joi.object({
+      validationSchema: Joi.object ({
         MONGO_URI: Joi.string().required(),
         JWT_SECRET: Joi.string().required(),
         JWT_EXPIRATION: Joi.string().required(),
-        HTTP_PORT: Joi.number().required(),
-        TCP_PORT: Joi.number().required(),
       })
     }),
     RmqModule,
-    AuthModule
+    AuthModule, 
+    DatabaseModule,
+    DatabaseModule.forFeature([{
+      name: Auth.name,
+      schema : AuthSchema
+    }]),
+    CacheModule.register(),
   ],
   controllers: [],
-  providers: [JWTStrategy],
+  providers: [JWTStrategy,AuthRepository],
 })
-export class AuthModule { }
+export class AppModule { }

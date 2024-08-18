@@ -21,7 +21,8 @@ import { JWTGuard } from '../../guards';
 
 @Controller()
 export class AuthController {
-    constructor(private readonly authService: AuthService) { }
+    constructor(private readonly authService: AuthService) { 
+     }
 
     @UseGuards(JWTGuard)
     @MessagePattern('validate-token')
@@ -33,7 +34,7 @@ export class AuthController {
 
     @MessagePattern('emailPreRegister')
     async emailPreRegister(@Payload() emailPreRegisterReqDto: EmailPreRegisterReqDto) {
-        return this.authService.emailPreRegister(
+         return this.authService.emailPreRegister(
             emailPreRegisterReqDto.fp,
             emailPreRegisterReqDto.ip,
             emailPreRegisterReqDto.email,
@@ -90,10 +91,6 @@ export class AuthController {
     async getUserInformation(@Payload() getUserInformationReqDto: GetUserInformationReqDto) {
         return this.authService.getUserInformation(getUserInformationReqDto.id);
     }
-
-
-
-
 
     @MessagePattern('emailResetPassword')
     async emailResetPassword(@Payload() emailResetPasswordReqDto: ResetPasswordReqDto) {
