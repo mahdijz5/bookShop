@@ -1,0 +1,60 @@
+{
+    "identifier": "ZBL",
+    "name": "Zibal payment gateway",
+    "auth_key" : "zibal",
+    "paymentRequest": {
+        "url": "https://gateway.zibal.ir/request/lazy",
+        "method": "POST",
+        "param_type": "BODY",
+        "auth": {
+            "type": "BODY",
+            "key": "merchant"
+        },
+        "params": {
+            "amount": "amount",
+            "callbackUrl": "callbackUrl",
+            "description": "description",
+            "orderId": "orderId",
+            "mobile": "mobile",
+            "email": ""
+        },
+        "response": {
+            "link": "",
+            "trackId": "trackId",
+            "status": "result",
+            "message": "message"
+        }
+    },
+    "startPay": {
+        "url": "https://gateway.zibal.ir/start",
+        "method": "GET",
+        "param_type": "PARAM",
+        "params": {
+            "trackId": "trackId"
+        },
+        "response": {
+            "status": "status",
+            "trackId": "trackId",
+            "orderId": "orderId",
+            "cardNumber": "cardNumber",
+            "hashedCardNumber": "hashedCardNumber"
+        }
+    },
+    "verifyPayment": {
+        "url": "https://gatewayA.com/api/verify",
+        "method": "POST",
+        "param_type": "BODY",
+        "auth": {
+            "type": "BODY",
+            "key": "merchant"
+        },
+        "params": {
+            "trackId" : "trackId",
+            "orderId" : ""
+        },
+        "response": {
+            "paidAt": "paidAt",
+            "status": "status" 
+        }
+    }
+}

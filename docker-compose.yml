@@ -1,0 +1,40 @@
+version: '3.8'
+services:
+  reservation2:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: prod
+      args:
+        - APP_NAME=reservation
+        - NODE_ENV=prod
+    # env_file:
+    #   - ./apps/reservation/.env
+    ports:
+      - '3000:3000'
+    volumes:
+      - .:/usr/src/app
+    # command: npm run start:prod
+
+  mongo:
+    image: mongo
+    ports:
+      - "27017:27017"
+    volumes:
+      - ./data/mongo_data:/data/db
+
+  rabbitmq:
+    image: rabbitmq:3-management
+    container_name: rabbitmq
+    hostname: rabbitmq
+    ports:
+        - 5672:5672
+        - 15672:15672
+    volumes:
+        - ./data/rabbitmq_data:/var/lib/rabbitmq
+    environment:
+        RABBITMQ_DEFAULT_USER: ${RABBITMQ_DEFAULT_USER}
+        RABBITMQ_DEFAULT_PASS: ${RABBITMQ_DEFAULT_PASS}
+    env_file:
+        - .env
+ 

@@ -1,0 +1,61 @@
+ {
+    "identifier": "IDP",
+    "auth_key" : "6a7f99eb-7c20-4412-a972-6dfb7cd253a4",
+    "name": "Idpay payment gateway",
+    "paymentRequest": {
+        "url": "https://api.idpay.ir/v1.1/payment",
+        "method": "POST",
+        "param_type": "BODY",
+        "auth": {
+            "type": "HEADER",
+            "key": "X-API-KEY"
+     
+        },
+        "params": {
+            "amount": "amount",
+            "callbackUrl": "callback",
+            "description": "desc",
+            "orderId": "order_id",
+            "mobile": "phone",
+            "email": "mail"
+        },
+        "response": {
+            "link": "link",
+            "trackId": "id",
+            "status": "",
+            "message": ""
+        }
+    },
+    "startPay": {
+        "url": "https://gateway.zibal.ir/start",
+        "method": "GET",
+        "param_type": "PARAM",
+        "params": {
+            "trackId": "trackId"
+        },
+        "response": {
+            "status": "status",
+            "trackId": "trackId",
+            "orderId": "orderId",
+            "cardNumber": "cardNumber",
+            "hashedCardNumber": "hashedCardNumber"
+        }
+    },
+    "verifyPayment": {
+        "url": "https://api.idpay.ir/v1.1/payment/verify",
+        "method": "POST",
+        "param_type": "BODY",
+        "auth": {
+            "type": "BODY",
+            "key": "merchant"
+        },
+        "params": {
+            "trackId" : "id",
+            "orderId" : "order_id"
+        },
+        "response": {
+            "paidAt": "date",
+            "status": "status" 
+        }
+    }
+}
