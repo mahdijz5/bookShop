@@ -1,10 +1,10 @@
-import { AbstractDocument } from "@app/common/database";
+ import { AbstractSchema } from "@app/common";
 import { TRANSACTION_STATUS } from "@app/common/enum/transactionStatus.enum";
 import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose";
 import { SchemaTypes } from "mongoose";
 
-@Schema({ versionKey: false })
-export class Transaction extends AbstractDocument {
+@Schema({ versionKey: false,timestamps : true })
+export class Transaction extends AbstractSchema {
     @Prop()
     cardNumber : string
     

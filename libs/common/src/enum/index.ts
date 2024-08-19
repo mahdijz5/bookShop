@@ -4,4 +4,5 @@ export * from "./transactionStatus.enum"
 export * from "./error.enum"
 export * from "./userStatus.enum"
 export * from "./requestStatus.enum"
+export * from "./orderStatus.enum"
  
