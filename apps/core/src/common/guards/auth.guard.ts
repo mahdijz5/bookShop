@@ -39,13 +39,13 @@ export class AuthGuard implements CanActivate {
         const skipRole = this.reflector.getAllAndOverride('skipRole', [
             context.getHandler(),
             context.getClass(),
-        ]);
+        ])
+ 
         if (true) {
             return true;
         }
- 
-
-        return true;
+  
+        return true 
     }
 
     private getToken(context: ExecutionContext) {

@@ -10,6 +10,9 @@ import { DatabaseModule } from '@app/common';
 import { Auth, AuthSchema } from './modules/auth/schemas';
 import { AuthRepository } from './modules/auth/repositories';
 import { CacheModule } from '@app/common/cache';
+import { RoleBackendModule } from './modules/role-backend/role-backend.module';
+import { RoleModule } from './modules/role/role.module';
+import { BackendModule } from './modules/backend/backend.module';
 
 @Module({
   imports: [
@@ -25,6 +28,9 @@ import { CacheModule } from '@app/common/cache';
     }),
     RmqModule,
     AuthModule, 
+    RoleBackendModule,
+    RoleModule,
+    BackendModule,
     DatabaseModule,
     DatabaseModule.forFeature([{
       name: Auth.name,

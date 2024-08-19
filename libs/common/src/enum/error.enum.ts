@@ -80,4 +80,20 @@ export const ERROR = {
         key: 1012,
         value: 'User email is already exists.',
     },
+    ROUTE_ACCESS_DENIED: {
+        key: 1013,
+        value: "You don't have access this route.",
+    },
+    DO_NOT_HAVE_THIS_ROLE: {
+        key: 1014,
+        value: "You don't have access to this role.",
+    },
+    ROLE_IN_USE: {
+        key: 1015,
+        value: "Role is in use.",
+    },
+    ROLE_ALREADY_ALLOCATED: {
+        key: 1016,
+        value: 'You already have this role.',
+    },
 };

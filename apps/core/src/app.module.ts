@@ -8,6 +8,9 @@ import { AuthModule } from './modules/auth/auth.module';
 import { APP_GUARD } from '@nestjs/core';
 import { AuthGuard } from './common/guards';
 import { RmqModule } from '@app/common/rmq';
+import { RoleModule } from './modules/role/role.module';
+import { BackendModule } from './modules/backend/backend.module';
+import { RoleBackendModule } from './modules/role-backend/role-backend.module';
 
 
 @Module({
@@ -21,8 +24,11 @@ import { RmqModule } from '@app/common/rmq';
       })
     }),
     RmqModule.register([AUTH_SERVICE]),
+    AuthModule,
     IpgModule,
-    AuthModule
+    RoleModule,
+    BackendModule,
+    RoleBackendModule
   ],
   controllers: [],
   providers: [
