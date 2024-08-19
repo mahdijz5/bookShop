@@ -5,8 +5,10 @@ import { SchemaTypes } from "mongoose";
 
 @Schema({ versionKey: false,timestamps : true })
 export class Transaction extends AbstractSchema {
-    @Prop()
-    cardNumber : string
+    @Prop({
+        required :false
+    })
+    cardNumber?: string
     
     @Prop()
     amount : number

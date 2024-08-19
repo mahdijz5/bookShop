@@ -1,17 +1,18 @@
 import { HttpService } from '@nestjs/axios';
-import { BadGatewayException, BadRequestException, Body, Injectable, NotFoundException } from '@nestjs/common';
+import { BadGatewayException, BadRequestException, Body, Inject, Injectable, NotFoundException } from '@nestjs/common';
 import { firstValueFrom, lastValueFrom, NotFoundError } from 'rxjs';
 
 import { genRandomString } from '@app/common/utils/hash';
 import { compareCardNumbers } from '@app/common/utils/campare';
-import { ERROR, TRANSACTION_STATUS } from '@app/common';
-import { CreatePaymentReqDto, VerifyPaymentReqDto } from '@app/common/dto';
+import { ERROR, PACKAGE_SERVICE, TRANSACTION_STATUS } from '@app/common';
+import { CallbackResDto, CreatePaymentReqDto, VerifyPaymentReqDto } from '@app/common/dto';
 import { MESSAGES } from '../message.enum';
 import { zblConfig } from '../data';
 import { Transaction } from '../models';
 import { TransactionRepository } from '../repositories/transaction.repository';
 import { IpgRepository } from '../repositories/ipg.repository';
 import { Types } from 'mongoose';
+import { ClientProxy } from '@nestjs/microservices';
 
 
 
@@ -22,7 +23,7 @@ export class IpgHandlerService {
     private readonly httpService: HttpService,
     private readonly transactionRepository: TransactionRepository,
     private readonly ipgRepository: IpgRepository,
-
+    @Inject(PACKAGE_SERVICE) private readonly packageClient: ClientProxy
   ) {
 
   }
@@ -32,7 +33,8 @@ export class IpgHandlerService {
       const api = "paymentRequest"
       const orderId = genRandomString()
       const apiConfig = await this.getGatewayConfig(data.gatewayId, "paymentRequest")
-      const transaction = await this.transactionRepository.create({
+      const startPaymentConfig = await this.getGatewayConfig(data.gatewayId, "startPay")
+      const transaction = await this.transactionRepository.save({
         ...data,
         orderId,
         gatewayId: data.gatewayId
@@ -42,14 +44,12 @@ export class IpgHandlerService {
       const { isError } = await this.handleError(transaction, res)
       if (isError) return {}
 
-      await this.transactionRepository.update({ orderId }, { trackId: res.trackId })
+      await this.transactionRepository.updateOne({ orderId }, { trackId: res.trackId })
 
- 
-      console.log("ipg - - - ")
-      console.log(res)
-      console.log(apiConfig)
+
       return {
-        link: res.link || `${apiConfig["url"]}/${res.trackId}`
+        link: res.link || `${startPaymentConfig["url"]}/${res.trackId}`,
+        transactionId: transaction._id.toString()
       }
     } catch (error) {
       throw error
@@ -65,26 +65,29 @@ export class IpgHandlerService {
       const convertedData = await this.createResponse(data, transaction.gatewayId, "startPay")
 
 
-      const { isError } = await this.handleError(transaction, convertedData)
-      if (isError) return {}
-
-
-      if (convertedData.cardNumber && !compareCardNumbers(transaction.cardNumber, convertedData.cardNumber)) {
-        await this.transactionRepository.update({
-          _id: transaction._id
-        }, {
-          status: TRANSACTION_STATUS.FAILD,
-          cardNumber: ERROR.CARDNUMBER_ISNOT_MATCH
-        })
-
-        throw new BadRequestException(ERROR.CARDNUMBER_ISNOT_MATCH)
+      const { isError, message } = await this.handleError(transaction, convertedData)
+      if (isError) return {
+        isError, message
       }
 
-      return await this.verifyPayment({
+
+
+
+      await this.verifyPayment({
         orderId: transaction.orderId,
         trackId: transaction.trackId
       })
 
+
+      this.packageClient.emit("callback", <CallbackResDto>{
+        isError, 
+        message,
+        transactionId: transaction._id.toString()
+      })
+
+      return {
+        isError, message
+      }
     } catch (error) {
       throw error
     }
@@ -100,7 +103,7 @@ export class IpgHandlerService {
       const { isError } = await this.handleError(transaction, res)
       if (isError) return {}
 
-      await this.transactionRepository.update({
+      await this.transactionRepository.updateOne({
         _id: transaction._id
       }, {
         status: TRANSACTION_STATUS.VERIFIED,
@@ -182,9 +185,7 @@ export class IpgHandlerService {
 
   private async getGatewayConfig(id: string, api: string) {
     const ipg = await this.ipgRepository.findOne({ _id: new Types.ObjectId(id) })
-    console.log("ipg---")
     if (!ipg) throw new NotFoundException(ERROR.NOT_FOUND)
-    console.log(ipg)
     return { ...ipg.config[api], auth_key: ipg["auth_key"] }
   }
 
@@ -201,7 +202,7 @@ export class IpgHandlerService {
         message = MESSAGES[error]
       }
 
-      await this.transactionRepository.update({
+      await this.transactionRepository.updateOne({
         _id: transaction._id
       }, {
         error_message: message,

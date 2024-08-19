@@ -1,10 +1,10 @@
-import { AbstractDocument } from "@app/common/database";
+ import { AbstractSchema } from "@app/common";
 import { TRANSACTION_STATUS } from "@app/common/enum/transactionStatus.enum";
 import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose";
 import { SchemaType, SchemaTypes } from "mongoose";
 
 @Schema({ versionKey: false })
-export class Ipg extends AbstractDocument {
+export class Ipg extends AbstractSchema {
     @Prop({unique : true})
     identifier : string
 

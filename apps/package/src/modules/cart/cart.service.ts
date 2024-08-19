@@ -11,6 +11,9 @@ export class CartService {
         private readonly cartBookRepository: CartBookRepository,
     ) { }
 
+
+    
+
     async create(createCart: CreateCartReqDto) {
         try {
             await this.cartRepository.save({
@@ -52,6 +55,16 @@ export class CartService {
             }
 
             return {}
+        } catch (error) {
+            new HandleError(error)
+        }
+    }
+
+    async getCartOfUser(userId:  string) {
+        try {
+            return await this.cartRepository.findOne({
+                userId : new Types.ObjectId(userId)
+            })
         } catch (error) {
             new HandleError(error)
         }

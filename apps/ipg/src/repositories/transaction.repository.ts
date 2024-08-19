@@ -1,13 +1,20 @@
-import { AbstractRepository } from "@app/common/database";
- import { Logger } from "@nestjs/common";
-import { InjectModel } from "@nestjs/mongoose";
-import { Model } from "mongoose";
-import { Transaction } from "../models";
 
+
+import { Injectable, Logger } from '@nestjs/common';
+import { InjectConnection, InjectModel } from '@nestjs/mongoose';
+import { Connection, Model } from 'mongoose';
+
+import { AbstractRepository } from '@app/common';
+import { Transaction } from '../models';
+
+@Injectable()
 export class TransactionRepository extends AbstractRepository<Transaction> {
-    protected readonly logger = new Logger(TransactionRepository.name)
+    protected readonly logger: Logger = new Logger(TransactionRepository.name);
 
-    constructor(@InjectModel(Transaction.name) private readonly userRepository: Model<Transaction>) {
-        super(userRepository)
+    constructor(
+        @InjectModel(Transaction.name) TransactionModel: Model<Transaction>,
+        @InjectConnection() connection: Connection,
+    ) {
+        super(TransactionModel, connection);
     }
-} 
+}

@@ -12,18 +12,8 @@ import { BookVersionController } from './bookVersion.controller';
 
 @Module({
     imports: [
-        LoggerModule,
-        ConfigModule.forRoot({
-            isGlobal: true,
-            envFilePath: "apps/package/.env",
-            validationSchema: Joi.object({
-                MONGO_URI: Joi.string().required(),
-                JWT_SECRET: Joi.string().required(),
-                JWT_EXPIRATION: Joi.string().required(),
-            })
-        }),
-        CacheModule.register(),
-        DatabaseModule,
+       
+         DatabaseModule,
         DatabaseModule.forFeature([
             {
                 name: Book.name,

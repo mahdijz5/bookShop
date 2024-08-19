@@ -22,16 +22,16 @@ export class Order extends AbstractSchema {
 
     @Prop({
         type: SchemaTypes.ObjectId,
-        required: true,
+        required: false,
     })
-    transactionId: Types.ObjectId
+    transactionId?: Types.ObjectId
     
     @Prop({
         type: SchemaTypes.String,
         required: true,
         default : OrderStatusEnum.PENDING
     })
-    status: OrderStatusEnum
+    status?: OrderStatusEnum
 
 }
 

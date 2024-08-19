@@ -28,7 +28,7 @@ export class IpgService {
   ) {
     // this.create("IDP")
   }
- 
+
 
   async getAllJsonFiles(): Promise<any[]> {
     const pathDir = path.join(__dirname, '..', "..", "..", 'formats')
@@ -47,11 +47,11 @@ export class IpgService {
 
   async insertFromJson(identifier: string) {
     try {
- 
+
       const files = await this.getAllJsonFiles()
       const item = files.find((item) => item.identifier == identifier)
 
-      await this.ipgRepository.create({
+      await this.ipgRepository.save({
         auth_key: item.auth_key,
         config: item,
         name: item.name,
@@ -96,7 +96,7 @@ export class IpgService {
 
   async create(data: CreateIpgReqDto) {
     try {
-      await this.ipgRepository.create({
+      await this.ipgRepository.save({
         ...data,
         config: {
           ...data
@@ -110,8 +110,7 @@ export class IpgService {
 
   async update(data: UpdateIpgReqDto) {
     try {
-      console.log(data)
-      await this.ipgRepository.update({
+      await this.ipgRepository.updateOne({
         _id: new Types.ObjectId(data.id),
       }, {
         ...data
@@ -124,7 +123,7 @@ export class IpgService {
 
   async remove({ id }: RemoveReqDto) {
     try {
-      await this.ipgRepository.remove({
+      await this.ipgRepository.delete({
         _id: new Types.ObjectId(id)
       })
       return {}

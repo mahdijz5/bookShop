@@ -1,6 +1,6 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { InjectConnection, InjectModel } from '@nestjs/mongoose';
-import { Connection, Model } from 'mongoose';
+import { Connection, FilterQuery, Model, Types } from 'mongoose';
 import { AbstractRepository } from '@app/common';
 import { CartBook } from '../schemas/cartBook.schema';
 
@@ -13,5 +13,49 @@ export class CartBookRepository extends AbstractRepository<CartBook> {
         @InjectConnection() connection: Connection,
     ) {
         super(bookModel, connection);
+    }
+
+    async findBooksVersions(
+        filter:  FilterQuery<CartBook>,
+        cartId: Types.ObjectId,
+         
+    ): Promise<CartBook[]> {
+        const document = await this.model.aggregate([
+            {
+                $facet: {
+                    result: [
+                        { $match: { deletedAt: null,...filter,cartId } },
+                        {
+                            $lookup: {
+                                from: 'bookversions',
+                                localField: 'bookId',
+                                foreignField: 'bookId',
+                                as: 'versions',
+                                pipeline: [{ $match: { deletedAt: null } }],
+                            }, 
+                        },
+                        {
+                            $addFields: {
+                                version: { $first: "$versions" },  
+                            },
+                        },
+                        {
+                            $project: {
+                                deletedAt: 0,
+                                updatedAt: 0,
+                                backendId: 0,
+                                roleId: 0,
+                                version: {
+                                    deletedAt: 0,
+                                    updatedAt: 0,
+                                },
+                            },
+                        },
+                        
+                    ] ,
+                },
+            },
+        ]);
+         return document[0].result
     }
 }

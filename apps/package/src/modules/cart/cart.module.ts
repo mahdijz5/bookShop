@@ -22,8 +22,10 @@ import { CartBookRepository, CartRepository } from './repositories';
         schema: CartBookSchema,
       }
     ]),
+
   ],
   providers: [CartService,CartBookRepository,CartRepository],
-  controllers: [CartController]
+  controllers: [CartController],
+  exports : [CartService]
 })
 export class CartModule { }

@@ -1,5 +1,5 @@
 import { Body, Controller, Delete, Get, HttpCode, HttpStatus, Inject, Param, Patch, Post, Query } from '@nestjs/common';
-import { ApiBadRequestResponse, ApiTags } from '@nestjs/swagger';
+import { ApiBadRequestResponse, ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { CreateIpgDto, UpdateIpgDto } from './dto';
 import { ClientProxy } from '@nestjs/microservices';
 import { IPG_SERVICE, MESSAGE_PATTERN, REQUEST_TIMEOUT } from '@app/common';
@@ -7,11 +7,14 @@ import { CreateIpgReqDto, CreatePaymentReqDto, PaginationReqDto, RemoveReqDto, U
 import { timeout } from 'rxjs';
 import { CreatePaymentRDto } from './dto/create-payment.dto';
 import { FindAllReqDto } from '../../common/dto';
+import { Public } from '../../common/decorators';
 
 @ApiTags('Ipg')
+@ApiBearerAuth()
 @Controller({ path: 'ipg', version: '1' })
 export class IpgController {
     constructor(@Inject(IPG_SERVICE) private readonly ipgClient: ClientProxy) { }
+
 
 
     @HttpCode(HttpStatus.CREATED)
@@ -48,6 +51,7 @@ export class IpgController {
 
     @HttpCode(HttpStatus.OK)
     @Post("findAll")
+    @Public()
     findAll(@Body() findAll: FindAllReqDto) {
         return this.ipgClient
             .send<void, PaginationReqDto>(MESSAGE_PATTERN.IPG.FINDALL, {
@@ -90,6 +94,7 @@ export class IpgController {
     }
 
     @HttpCode(HttpStatus.OK)
+    @Public()
     @Post("callback")
     callback(@Body() body: any, @Query() query: any) {
 
@@ -100,7 +105,9 @@ export class IpgController {
             })
             .pipe(timeout(REQUEST_TIMEOUT));
     }
+    
     @HttpCode(HttpStatus.OK)
+    @Public()
     @Get("callback")
     callbackGet(@Query() query: any) {
 

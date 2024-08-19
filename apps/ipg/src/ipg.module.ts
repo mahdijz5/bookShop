@@ -4,7 +4,7 @@ import { IpgController } from './controllers/ipg.controller';
 import { ConfigModule } from '@nestjs/config';
 import * as Joi from 'joi';
 import { RmqModule } from '@app/common/rmq';
-import { DatabaseModule, IPG_SERVICE, LoggerModule } from '@app/common';
+import { DatabaseModule, IPG_SERVICE, LoggerModule, PACKAGE_SERVICE } from '@app/common';
 import { Transaction, TransactionSchema } from './models';
 import { TransactionRepository } from './repositories/transaction.repository';
 import { IpgHandlerService } from './services/handler.service';
@@ -17,16 +17,12 @@ import { IpgRepository } from './repositories/ipg.repository';
     HttpModule,
     ConfigModule.forRoot({
       isGlobal: true,
-      envFilePath: "apps/auth/.env",
+      envFilePath: "apps/ipg/.env",
       validationSchema: Joi.object({
         MONGO_URI: Joi.string().required(),
-        JWT_SECRET: Joi.string().required(),
-        JWT_EXPIRATION: Joi.string().required(),
-        HTTP_PORT: Joi.number().required(),
-        TCP_PORT: Joi.number().required(),
-      })
-    }),
-    RmqModule.register([IPG_SERVICE]),
+       })
+    }), 
+    RmqModule.register([IPG_SERVICE,PACKAGE_SERVICE]),
     LoggerModule,
     DatabaseModule,
     DatabaseModule.forFeature([
