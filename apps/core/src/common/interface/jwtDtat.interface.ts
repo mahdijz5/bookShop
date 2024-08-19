@@ -1,4 +1,3 @@
-export class JwtDataInterface { 
-    userIdPostgres : string
-    userId : string
+export class JwtDataInterface {
+    userId: string
 }

@@ -1,10 +1,10 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { InjectConnection, InjectModel } from '@nestjs/mongoose';
-import { Connection, Model } from 'mongoose';
- 
- import { AbstractRepository } from '@app/common';
+import { Connection, FilterQuery, Model, Types } from 'mongoose';
+
+import { AbstractRepository } from '@app/common';
 import { BookVersion } from '../schemas/bookVersion.schema';
- 
+
 @Injectable()
 export class BookVersionRepository extends AbstractRepository<BookVersion> {
     protected readonly logger: Logger = new Logger(BookVersionRepository.name);
@@ -14,5 +14,5 @@ export class BookVersionRepository extends AbstractRepository<BookVersion> {
         @InjectConnection() connection: Connection,
     ) {
         super(bookVersionModel, connection);
-    }
+    } 
 }

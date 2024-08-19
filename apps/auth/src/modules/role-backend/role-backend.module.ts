@@ -8,10 +8,11 @@ import { RoleBackendController } from './role-backend.controller';
 import { RoleBackendService } from './role-backend.service';
 import { RoleBackend, RoleBackendSchema } from './schemas';
 import { RoleBackendRepository } from './repositories';
+import { DatabaseModule } from '@app/common';
  
 @Module({
     imports: [
-        MongooseModule.forFeature([
+        DatabaseModule.forFeature([
             {
                 name: RoleBackend.name,
                 schema: RoleBackendSchema,

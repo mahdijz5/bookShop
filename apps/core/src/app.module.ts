@@ -11,7 +11,8 @@ import { RmqModule } from '@app/common/rmq';
 import { RoleModule } from './modules/role/role.module';
 import { BackendModule } from './modules/backend/backend.module';
 import { RoleBackendModule } from './modules/role-backend/role-backend.module';
-
+import { PackageModule } from './modules/package/package.module';
+ 
 
 @Module({
   imports: [
@@ -28,7 +29,9 @@ import { RoleBackendModule } from './modules/role-backend/role-backend.module';
     IpgModule,
     RoleModule,
     BackendModule,
-    RoleBackendModule
+    RoleBackendModule,
+    PackageModule,
+     
   ],
   controllers: [],
   providers: [

@@ -1,9 +1,9 @@
 import { ApiProperty } from "@nestjs/swagger";
-import { IsBoolean, IsDate, IsEmpty, IsNotEmpty, IsNumber, IsOptional, IsString, IsUUID } from "class-validator";
+import { IsBoolean, IsDate, IsEmpty, IsNotEmpty, IsNumber, IsOptional, IsString, IsUUID, IsDateString, IsMongoId, IsArray } from "class-validator";
 import { type } from "os";
 
-export const ApiCustomeProperty = (data : {valueType?: "string" | "number" | "boolean" | 'undefined' | 'date', required?: boolean ,example? : any, desc? : string } = {}) => {
-  const {desc = "create",example = "example",required = true,valueType } = data
+export const ApiCustomeProperty = (data: { valueType?: "string" | "number" | "boolean" | 'undefined' | 'date' | "objectId" | "array", required?: boolean, example?: any, desc?: string } = {}) => {
+  const { desc = "create", example = "example", required = true, valueType } = data
   return function (target: any, key: string) {
     ApiProperty({
       description: desc,
@@ -12,10 +12,8 @@ export const ApiCustomeProperty = (data : {valueType?: "string" | "number" | "bo
       uniqueItems: true,
     })(target, key);
 
-    if(example == "uuid") {
-      IsUUID()
-    }
-    if(valueType) {
+
+    if (valueType) {
       switch (valueType) {
         case 'string':
           IsString()(target, key);
@@ -27,13 +25,19 @@ export const ApiCustomeProperty = (data : {valueType?: "string" | "number" | "bo
           IsBoolean()(target, key);
           break;
         case 'date':
-          IsDate()(target, key);
+          IsDateString()(target, key);
+          break;
+        case 'objectId':
+          IsMongoId()(target, key);
+          break;
+        case 'array':
+          IsArray()(target, key);
           break;
         case 'undefined':
           break;
-  
+
       }
-    }else {
+    } else {
       switch (typeof example) {
         case 'string':
           IsString()(target, key);
@@ -46,13 +50,13 @@ export const ApiCustomeProperty = (data : {valueType?: "string" | "number" | "bo
           break;
         case 'undefined':
           break;
-  
+
       }
     }
 
     if (required) {
       IsNotEmpty()(target, key);
-    }else {
+    } else {
       IsOptional()(target, key);
     }
   };

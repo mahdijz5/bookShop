@@ -1,13 +1,13 @@
 import { Module } from '@nestjs/common';
-import { BackendService   } from './backend.service';
-import { BackendController  } from './backend.controller';
-import { MongooseModule } from '@nestjs/mongoose';
+import { BackendService } from './backend.service';
+import { BackendController } from './backend.controller';
 import { Backend, BackendSchema } from './schemas';
 import { BackendRepository } from './repositories';
- 
+import { DatabaseModule } from '@app/common';
+
 @Module({
     imports: [
-        MongooseModule.forFeature([
+        DatabaseModule.forFeature([
             {
                 name: Backend.name,
                 schema: BackendSchema,
@@ -15,6 +15,6 @@ import { BackendRepository } from './repositories';
         ]),
     ],
     controllers: [BackendController],
-    providers: [BackendService ,BackendRepository],
+    providers: [BackendService, BackendRepository],
 })
-export class BackendModule {}
+export class BackendModule { }

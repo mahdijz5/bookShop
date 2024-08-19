@@ -4,7 +4,7 @@ import { JwtService } from '@nestjs/jwt';
 import * as moment from 'moment';
 import { Types } from 'mongoose';
 import * as mailDtos from '@app/common/dto/mail';
-import { AUTH_SERVICE, JWT_EXPIRE, MAIL_SERVICE, VERIFICATION_TEMP_EXPIRE_TIME } from '@app/common/constants';
+import { AUTH_SERVICE, JWT_EXPIRE, MAIL_SERVICE, PACKAGE_SERVICE, VERIFICATION_TEMP_EXPIRE_TIME } from '@app/common/constants';
 import { comparePassword, genHash, genRandomNum, genRandomNumCode, genRandomString, hashPassword } from '../../utils';
 import { ERROR, UserStatus } from '@app/common';
 import { HandleError } from '@app/common/helpers';
@@ -18,6 +18,7 @@ import {
 } from './repositories';
 import { ConfigService } from '@nestjs/config';
 import { lastValueFrom } from 'rxjs';
+import { CreateCartReqDto } from '@app/common/dto';
 
 @Injectable()
 export class AuthService {
@@ -28,6 +29,7 @@ export class AuthService {
         private readonly jwtService: JwtService,
         private readonly cacheService: CacheService,
         @Inject(MAIL_SERVICE) private readonly mailClient: ClientProxy,
+        @Inject(PACKAGE_SERVICE) private readonly packageClient: ClientProxy,
         private readonly authRepository: AuthRepository,
         private readonly emailVerificationTempRepository: EmailVerificationTempRepository,
         private readonly resetPasswordTempRepository: ResetPasswordTempRepository,
@@ -263,13 +265,13 @@ export class AuthService {
             if (isUsernameTaken) {
                 throw new BadRequestException(ERROR.USERNAME_ALREADY_EXISTS);
             }
-
-
-
+            
+            
             auth.password = await hashPassword(password);
-
+            
             await auth.save();
-
+            
+            await lastValueFrom(this.packageClient.send("cart.create",<CreateCartReqDto>{userId : auth._id+""}))
             const loginRes = await this.login(username, password)
 
             return {

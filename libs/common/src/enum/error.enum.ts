@@ -96,4 +96,8 @@ export const ERROR = {
         key: 1016,
         value: 'You already have this role.',
     },
+    BOOK_NOTFOUND: {
+        key : 1017,
+        value : "Book is not found"
+    }
 };

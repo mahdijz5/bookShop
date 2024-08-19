@@ -3,10 +3,10 @@ import { MessagePattern, Payload } from '@nestjs/microservices';
 import {
     CreateRequestDto,
     RemoveRequestDto,
-    FindBackendsRequestDto,
     FindRolesRequestDto,
 } from '@app/common/dto/role/role-backend';
 import { RoleBackendService } from './role-backend.service';
+import { FindBackendsRequestDto } from '@app/common/dto/role/role-backend/findFronts-req.dto';
 
 @Controller()
 export class RoleBackendController {

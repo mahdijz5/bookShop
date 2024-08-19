@@ -2,7 +2,7 @@ import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { MongooseModule } from '@nestjs/mongoose';
 import { JwtModule } from '@nestjs/jwt';
-import { JWT_EXPIRE, MAIL_SERVICE } from '@app/common/constants';
+import { JWT_EXPIRE, MAIL_SERVICE, PACKAGE_SERVICE } from '@app/common/constants';
 import { AuthService } from './auth.service';
 import { CacheModule } from '@app/common/cache';
 import {
@@ -37,7 +37,7 @@ import { DatabaseModule } from '@app/common';
             { name: EmailVerificationTemp.name, schema: EmailVerificationTempSchema },
             { name: ResetPasswordTemp.name, schema: ResetPasswordTempSchema },
         ]),
-        RmqModule.register([MAIL_SERVICE]),
+        RmqModule.register([MAIL_SERVICE,PACKAGE_SERVICE]),
         CacheModule.register(),
     ],
     providers: [

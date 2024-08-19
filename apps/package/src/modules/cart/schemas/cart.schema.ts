@@ -11,6 +11,7 @@ export class Cart extends AbstractSchema {
     @Prop({
         type: SchemaTypes.ObjectId,
         required: true,
+        unique:true
     })
     userId : Types.ObjectId
 
