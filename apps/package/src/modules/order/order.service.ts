@@ -2,7 +2,7 @@ import { Inject, Injectable } from '@nestjs/common';
 import { OrderBookRepository, OrderRepository } from './repositories';
 import { HandleError } from '@app/common/helpers';
 import { CartService } from '../cart/cart.service';
-import { CallbackResDto, CreatePaymentReqDto, PaginationReqDto, PurchaseBookReqDto } from '@app/common/dto';
+import { CallbackResDto, CreatePaymentReqDto, PaginationReqDto, PaginationResDto, PaginationUserIdReqDto, PurchaseBookReqDto } from '@app/common/dto';
 import { CartBookRepository, CartRepository } from '../cart/repositories';
 import { BookVersionRepository } from '../bookVersion/repositories';
 import { Types } from 'mongoose';
@@ -70,10 +70,7 @@ export class OrderService {
         transactionId
     }: CallbackResDto) {
         try {
-            console.log({
-                isError,
-                transactionId
-            })
+             
             const order = await this.orderRepository.findOne({ transactionId: new Types.ObjectId(transactionId) })
 
             order.status = isError ? OrderStatusEnum.FAILD : OrderStatusEnum.PURCHASED
@@ -85,6 +82,36 @@ export class OrderService {
     }
 
 
-  
+    async findAllOfUser({
+        userId,
+        base: {
+            order,
+            page,
+            row
+        },
+        field,
+        filter,
+    }: PaginationUserIdReqDto) {
+        try {
+            const orders = await this.orderRepository.findAllWithTransaction(
+                new Types.ObjectId(userId),
+                filter,
+                page,
+                field,
+                order,
+                row,
+
+            );  
+            console.log(orders)
+
+            return new PaginationResDto(orders.result,{
+                 page,
+                 row,
+                 total : orders.count
+            })
+        } catch (error) {
+            new HandleError(Error)
+        }
+    }
 
 }

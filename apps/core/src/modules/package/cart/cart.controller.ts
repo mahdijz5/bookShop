@@ -53,4 +53,16 @@ export class CartController {
             .pipe(timeout(REQUEST_TIMEOUT));
     }
 
+    @ApiCreatedResponse({ type: EmptySuccessResponseDto })
+    @HttpCode(HttpStatus.OK)
+    @Get()
+    @SkipRole()
+    getUserCart(@JWTData() data: JwtDataInterface) {
+        return this.packageClient
+            .send<void, JwtDataInterface>('user.cart', {
+                userId: data.userId
+            })
+            .pipe(timeout(REQUEST_TIMEOUT));
+    }
+
 }

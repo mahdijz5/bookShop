@@ -23,11 +23,11 @@ import { timeout } from 'rxjs';
 import { REQUEST_TIMEOUT, AUTH_SERVICE, PACKAGE_SERVICE } from '@app/common/constants';
 
 
-import { ApiBadRequestResponseDto, EmptySuccessResponseDto, } from 'apps/core/src/common/dto';
+import { ApiBadRequestResponseDto, EmptySuccessResponseDto, FindAllReqDto, } from 'apps/core/src/common/dto';
 import { JWTData } from '@app/common';
 import { JwtDataInterface } from 'apps/core/src/common/interface';
 import { SkipRole } from 'apps/core/src/common/decorators';
-import { PurchaseBookReqDto, SetToCartReqDto } from '@app/common/dto';
+import { PaginationReqDto, PaginationUserIdReqDto, PurchaseBookReqDto, SetToCartReqDto } from '@app/common/dto';
 import { PurchaseBookDto, PurchaseBookResDto } from './dto';
 
 @ApiTags('Order')
@@ -49,6 +49,21 @@ export class OrderController {
             .send<void, PurchaseBookReqDto>('purchase', {
                 userId :data.userId,
                 ...purchase
+            })
+            .pipe(timeout(REQUEST_TIMEOUT));
+    }
+
+
+    @ApiOperation({summary : "FindAll orders of user"})
+    @ApiOkResponse({ type: PurchaseBookResDto })
+    @HttpCode(HttpStatus.OK)
+    @Post("user/findAll")
+    @SkipRole()
+    findAllOfUser(@Body() pagination: FindAllReqDto, @JWTData() data: JwtDataInterface) {
+        return this.packageClient
+            .send<void, PaginationUserIdReqDto>('user.order.findAll', {
+                ...pagination,
+                userId :data.userId,
             })
             .pipe(timeout(REQUEST_TIMEOUT));
     }

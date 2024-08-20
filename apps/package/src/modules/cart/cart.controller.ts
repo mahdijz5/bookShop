@@ -9,6 +9,11 @@ export class CartController {
         private readonly cartService : CartService
     ) {}
 
+    @MessagePattern("user.cart")
+    async getUserCart(@Payload("userId") userId: string): Promise<{}> {
+        return await this.cartService.getCartOfUser(userId)
+    }
+    
     @MessagePattern("cart.create")
     async create(@Payload() createCart: CreateCartReqDto): Promise<{}> {
         return await this.cartService.create(createCart)

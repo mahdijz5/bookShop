@@ -12,7 +12,7 @@ export class CartService {
     ) { }
 
 
-    
+
 
     async create(createCart: CreateCartReqDto) {
         try {
@@ -44,7 +44,7 @@ export class CartService {
 
             const isExist = await this.cartBookRepository.findOne(filter)
             console.log(isExist)
- 
+
             if (isExist) {
                 await this.cartBookRepository.updateOne(filter, { quantity: data.quantity })
             } else {
@@ -60,11 +60,18 @@ export class CartService {
         }
     }
 
-    async getCartOfUser(userId:  string) {
+    async getCartOfUser(userId: string) {
         try {
-            return await this.cartRepository.findOne({
-                userId : new Types.ObjectId(userId)
+            const cart = await this.cartRepository.findOne({
+                userId: new Types.ObjectId(userId)
             })
+
+            const items = await this.cartBookRepository.findByBooksVersions({}, new Types.ObjectId(cart._id))
+
+            return {
+                cart,
+                items
+            }
         } catch (error) {
             new HandleError(error)
         }

@@ -7,10 +7,7 @@ export class PaginationReqDto {
     filter?: any = {}
     field?: string
 }
-
-export class PaginationWalletAddressReqDto extends PaginationReqDto {
-    walletAddress: string
-}
+ 
 
 export class PaginationUserIdReqDto extends PaginationReqDto {
     userId: string
