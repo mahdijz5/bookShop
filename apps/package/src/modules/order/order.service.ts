@@ -26,10 +26,10 @@ export class OrderService {
     }
     async purchase(data: PurchaseBookReqDto) {
         try {
-            const cart = await this.cartService.getCartOfUser(data.userId)
+            const userCart = await this.cartService.getCartOfUser(data.userId)
             const cartBooks: any = await this.cartBookRepository.findBooksVersions({
-                cartId: cart._id
-            }, cart._id)
+                cartId: userCart.cart._id
+            }, userCart.cart._id)
 
             let totalPrice = 0
 
@@ -70,7 +70,7 @@ export class OrderService {
         transactionId
     }: CallbackResDto) {
         try {
-             
+
             const order = await this.orderRepository.findOne({ transactionId: new Types.ObjectId(transactionId) })
 
             order.status = isError ? OrderStatusEnum.FAILD : OrderStatusEnum.PURCHASED
@@ -101,13 +101,13 @@ export class OrderService {
                 order,
                 row,
 
-            );  
+            );
             console.log(orders)
 
-            return new PaginationResDto(orders.result,{
-                 page,
-                 row,
-                 total : orders.count
+            return new PaginationResDto(orders.result, {
+                page,
+                row,
+                total: orders.count
             })
         } catch (error) {
             new HandleError(Error)

@@ -23,7 +23,7 @@ import { CreateCartReqDto } from '@app/common/dto';
 @Injectable()
 export class AuthService {
     private readonly logger: Logger = new Logger(AuthService.name);
- 
+
     constructor(
         private readonly configService: ConfigService,
         private readonly jwtService: JwtService,
@@ -145,7 +145,7 @@ export class AuthService {
         });
         return { token, expire }
     }
- 
+
     private async signToken(data: Record<string, string>) {
         const key = genRandomString();
         await this.cacheService.setObj(key, data, JWT_EXPIRE);
@@ -159,9 +159,9 @@ export class AuthService {
     async emailPreRegister(fp: string, ip: string, email: string, callbackUrl?: string): Promise<{ code: string }> {
         try {
             let auth = await this.authRepository.findOne({ email }, {})
-            console.log(auth)
+
             const date = moment().toDate()
-            if (auth) {  
+            if (auth) {
                 if (moment(date).diff(auth?.resendDate || date, "seconds") <= 30) {
                     throw new BadRequestException(ERROR.VERIFICATION_CODE_NOT_EXPIRED)
                 }
@@ -171,7 +171,7 @@ export class AuthService {
                 auth = await this.authRepository.save({ ip, email });
             } else if (auth && auth.password && auth.username) {
                 throw new BadRequestException(ERROR.ALREADY_EXISTS)
-            } 
+            }
 
 
             await this.authRepository.updateOne({ _id: auth._id }, { resendDate: date })
@@ -265,13 +265,13 @@ export class AuthService {
             if (isUsernameTaken) {
                 throw new BadRequestException(ERROR.USERNAME_ALREADY_EXISTS);
             }
-            
-            
+
+
             auth.password = await hashPassword(password);
-            
+
             await auth.save();
-            
-            await lastValueFrom(this.packageClient.send("cart.create",<CreateCartReqDto>{userId : auth._id+""}))
+
+            await lastValueFrom(this.packageClient.send("cart.create", <CreateCartReqDto>{ userId: auth._id + "" }))
             const loginRes = await this.login(username, password)
 
             return {

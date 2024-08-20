@@ -1,8 +1,85 @@
 version: '3.8'
 services:
  
+    core-svc:
+        container_name: core-svc
+        build:
+            context: .
+            dockerfile: Dockerfile
+            target: prod
+            args:
+                - APP_NAME=core
+        restart: unless-stopped
+        ports:
+            - 6004:6004
+        networks:
+            - net
+        depends_on:
+            - rabbitmq
+            - mongodb-primary  
+    
+    ipg-svc:
+        container_name: ipg-svc
+        build:
+            context: .
+            dockerfile: Dockerfile
+            target: prod
+            args:
+                - APP_NAME=ipg
+        restart: unless-stopped
+        networks:
+            - net
+        depends_on:
+            - rabbitmq
+            - mongodb-primary 
+  
+    auth-svc:
+        container_name: auth-svc
+        build:
+            context: .
+            dockerfile: Dockerfile
+            target: prod
+            args:
+                - APP_NAME=auth
+        restart: unless-stopped
+        networks:
+            - net
+        depends_on:
+            - rabbitmq
+            - mongodb-primary 
+    
+    package-svc:
+        container_name: package-svc
+        build:
+            context: .
+            dockerfile: Dockerfile
+            target: prod
+            args:
+                - APP_NAME=package
+        restart: unless-stopped
+        networks:
+            - net
+        depends_on:
+            - rabbitmq
+            - mongodb-primary 
+   
+    mail-svc:
+        container_name: mail-svc
+        build:
+            context: .
+            dockerfile: Dockerfile
+            target: prod
+            args:
+                - APP_NAME=mail
+        restart: unless-stopped
+        networks:
+            - net
+        depends_on:
+            - rabbitmq
+            - mongodb-primary 
 
     mongodb-primary: 
+        container_name : mongodb-primary
         ports:
             - "27017:27017"
         image: docker.io/bitnami/mongodb:7.0
