@@ -16,6 +16,7 @@ import {
     ApiBearerAuth,
     ApiCreatedResponse,
     ApiOkResponse,
+    ApiOperation,
     ApiTags,
 } from '@nestjs/swagger';
 import { timeout } from 'rxjs';
@@ -38,6 +39,9 @@ export class BackendController {
         private readonly authClient: ClientProxy,
     ) { }
 
+    @ApiOperation({
+        summary : "Create backend Api routes"
+    })
     @ApiCreatedResponse({ type: EmptySuccessResponseDto })
     @HttpCode(HttpStatus.CREATED)
     @Post()

@@ -20,6 +20,7 @@ import {
     ApiCreatedResponse,
     ApiNoContentResponse,
     ApiOkResponse,
+    ApiOperation,
     ApiTags,
 } from '@nestjs/swagger';
 import { AUTH_SERVICE, REQUEST_TIMEOUT } from '@app/common/constants';
@@ -71,6 +72,9 @@ export class AuthController {
 
 
 
+    @ApiOperation({
+        summary : "Enter email to get code"
+    })
     @ApiCreatedResponse({ type: EmptySuccessResponseDto })
     @Public()
     @HttpCode(HttpStatus.CREATED)
@@ -90,6 +94,10 @@ export class AuthController {
             .pipe(timeout(REQUEST_TIMEOUT));
     }
 
+
+    @ApiOperation({
+        summary : "Resend email code verfication"
+    })
     @ApiOkResponse({ type: EmptySuccessResponseDto })
     @Public()
     @HttpCode(HttpStatus.OK)
@@ -112,6 +120,9 @@ export class AuthController {
     }
 
 
+    @ApiOperation({
+        summary : "Enter emailVerficationCode to verify email"
+    })
     @ApiObjectResponse(HttpStatus.OK, EmailVerifyResultDto)
     @Public()
     @HttpCode(HttpStatus.OK)
@@ -130,6 +141,9 @@ export class AuthController {
             .pipe(timeout(REQUEST_TIMEOUT));
     }
 
+    @ApiOperation({
+        summary : "Complete register"
+    })
     @ApiObjectResponse(HttpStatus.CREATED, RegisterResultDto)
     @SkipRole()
     @ApiBearerAuth()
@@ -171,6 +185,9 @@ export class AuthController {
     @SkipRole()
     @ApiBearerAuth()
     @HttpCode(HttpStatus.OK)
+    @ApiOperation({
+        summary : "Get current User info"
+    })
     @Get('me')
     getUserInformation(@JWTData() jwtData: any) {
         if (jwtData.isTemp == "true") throw new UnauthorizedException(ERROR.JWT_IS_NOT_VALID)
@@ -183,6 +200,9 @@ export class AuthController {
 
 
 
+    @ApiOperation({
+        summary : "Forget password"
+    })
     @ApiOkResponse({ type: EmptySuccessResponseDto })
     @Public()
     @HttpCode(HttpStatus.OK)
@@ -201,6 +221,9 @@ export class AuthController {
             .pipe(timeout(REQUEST_TIMEOUT));
     }
 
+    @ApiOperation({
+        summary : "Complete forget password"
+    })
     @ApiNoContentResponse({ type: EmptySuccessResponseDto })
     @Public()
     @HttpCode(HttpStatus.NO_CONTENT)
@@ -225,6 +248,9 @@ export class AuthController {
 
 
     @SkipRole()
+    @ApiOperation({
+        summary : "Choose role to get access to routes"
+    })
     @ApiBearerAuth()
     @HttpCode(HttpStatus.OK)
     @Post('add-role:id')

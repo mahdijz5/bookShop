@@ -40,6 +40,9 @@ export class OrderController {
         private readonly packageClient: ClientProxy,
     ) { }
 
+    @ApiOperation({
+        summary: "Finalize  payment"
+    })
     @ApiOkResponse({ type: PurchaseBookResDto })
     @HttpCode(HttpStatus.OK)
     @Post("payment")
@@ -47,14 +50,14 @@ export class OrderController {
     setToCart(@Body() purchase: PurchaseBookDto, @JWTData() data: JwtDataInterface) {
         return this.packageClient
             .send<void, PurchaseBookReqDto>('purchase', {
-                userId :data.userId,
+                userId: data.userId,
                 ...purchase
             })
             .pipe(timeout(REQUEST_TIMEOUT));
     }
 
 
-    @ApiOperation({summary : "FindAll orders of user"})
+    @ApiOperation({ summary: "FindAll orders of user" })
     @ApiOkResponse({ type: PurchaseBookResDto })
     @HttpCode(HttpStatus.OK)
     @Post("user/findAll")
@@ -63,7 +66,7 @@ export class OrderController {
         return this.packageClient
             .send<void, PaginationUserIdReqDto>('user.order.findAll', {
                 ...pagination,
-                userId :data.userId,
+                userId: data.userId,
             })
             .pipe(timeout(REQUEST_TIMEOUT));
     }

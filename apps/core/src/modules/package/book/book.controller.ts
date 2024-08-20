@@ -16,6 +16,7 @@ import {
     ApiBearerAuth,
     ApiCreatedResponse,
     ApiOkResponse,
+    ApiOperation,
     ApiTags,
 } from '@nestjs/swagger';
 import { timeout } from 'rxjs';
@@ -38,6 +39,9 @@ export class BookController {
         private readonly packageClient: ClientProxy,
     ) { }
 
+    @ApiOperation({
+        summary : "Create book"
+    })
     @ApiCreatedResponse({ type: EmptySuccessResponseDto })
     @HttpCode(HttpStatus.CREATED)
     @Post()
@@ -49,6 +53,9 @@ export class BookController {
             .pipe(timeout(REQUEST_TIMEOUT));
     }
 
+    @ApiOperation({
+        summary : "Update book"
+    })
     @ApiCreatedResponse({ type: EmptySuccessResponseDto })
     @HttpCode(HttpStatus.OK)
     @Patch(":id")
@@ -61,6 +68,10 @@ export class BookController {
             .pipe(timeout(REQUEST_TIMEOUT));
     }
 
+
+    @ApiOperation({
+        summary : "Remove book"
+    })
     @ApiCreatedResponse({ type: EmptySuccessResponseDto })
     @HttpCode(HttpStatus.OK)
     @Delete(":id")
@@ -72,6 +83,9 @@ export class BookController {
             .pipe(timeout(REQUEST_TIMEOUT));
     }
 
+    @ApiOperation({
+        summary : "FindAll book"
+    })
     @ApiFindAllResponse(PaginationResDto)
     @HttpCode(HttpStatus.OK)
     @Public()

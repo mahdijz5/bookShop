@@ -40,6 +40,9 @@ export class CartController {
         private readonly packageClient: ClientProxy,
     ) { }
 
+    @ApiOperation({
+        summary: "Update user cart"
+    })
     @ApiCreatedResponse({ type: EmptySuccessResponseDto })
     @HttpCode(HttpStatus.OK)
     @Post("set")
@@ -53,6 +56,9 @@ export class CartController {
             .pipe(timeout(REQUEST_TIMEOUT));
     }
 
+    @ApiOperation({
+        summary: "Get user cart"
+    })
     @ApiCreatedResponse({ type: EmptySuccessResponseDto })
     @HttpCode(HttpStatus.OK)
     @Get()

@@ -1,5 +1,5 @@
 import { Body, Controller, Delete, Get, HttpCode, HttpStatus, Inject, Param, Patch, Post, Query } from '@nestjs/common';
-import { ApiBadRequestResponse, ApiBearerAuth, ApiTags } from '@nestjs/swagger';
+import { ApiBadRequestResponse, ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { CreateIpgDto, UpdateIpgDto } from './dto';
 import { ClientProxy } from '@nestjs/microservices';
 import { IPG_SERVICE, MESSAGE_PATTERN, REQUEST_TIMEOUT } from '@app/common';
@@ -17,6 +17,9 @@ export class IpgController {
 
 
 
+    @ApiOperation({
+        summary : "Create Payment gateway"
+    })
     @HttpCode(HttpStatus.CREATED)
     @Post()
     create(@Body() createIpg: CreateIpgDto) {
@@ -28,6 +31,9 @@ export class IpgController {
             .pipe(timeout(REQUEST_TIMEOUT));
     }
 
+    @ApiOperation({
+        summary : "Update Payment gateway"
+    })
     @HttpCode(HttpStatus.OK)
     @Patch('/:id')
     update(@Body() createIpg: UpdateIpgDto, @Param("id") id: string) {
@@ -39,6 +45,9 @@ export class IpgController {
             .pipe(timeout(REQUEST_TIMEOUT));
     }
 
+    @ApiOperation({
+        summary : "Delte Payment gateway"
+    })
     @HttpCode(HttpStatus.OK)
     @Delete('/:id')
     remove(@Param("id") id: string) {
@@ -49,6 +58,9 @@ export class IpgController {
             .pipe(timeout(REQUEST_TIMEOUT));
     }
 
+    @ApiOperation({
+        summary : "FindAll Payment gateway"
+    })
     @HttpCode(HttpStatus.OK)
     @Post("findAll")
     @Public()
@@ -60,6 +72,9 @@ export class IpgController {
             .pipe(timeout(REQUEST_TIMEOUT));
     }
 
+    @ApiOperation({
+        summary : "Convert json config to database"
+    })
     @HttpCode(HttpStatus.OK)
     @Post("json/insert/:identifier")
     insertFromJson(@Param("identifier") identifier: string) {
@@ -71,6 +86,9 @@ export class IpgController {
             .pipe(timeout(REQUEST_TIMEOUT));
     }
 
+    @ApiOperation({
+        summary : "Get preset json configs"
+    })
     @HttpCode(HttpStatus.OK)
     @Post("json/findAll")
     findAllFromJson() {

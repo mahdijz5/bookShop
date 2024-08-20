@@ -14,6 +14,7 @@ import {
     ApiBearerAuth,
     ApiCreatedResponse,
     ApiOkResponse,
+    ApiOperation,
     ApiTags,
 } from '@nestjs/swagger';
 import { timeout } from 'rxjs';
@@ -36,6 +37,9 @@ export class RoleBackendController {
         private readonly authClient: ClientProxy,
     ) { }
 
+    @ApiOperation({
+        summary: "Attach  backendRoute to role"
+    })
     @ApiCreatedResponse({ type: EmptySuccessResponseDto })
     @HttpCode(HttpStatus.CREATED)
     @Post()
@@ -48,6 +52,9 @@ export class RoleBackendController {
             .pipe(timeout(REQUEST_TIMEOUT));
     }
 
+    @ApiOperation({
+        summary: "Get backends of role"
+    })
     @HttpCode(HttpStatus.OK)
     @Post('backends/:roleId')
     findBackends(@Body() data: FindAllReqDto, @Param("roleId") roleId: string) {
@@ -59,6 +66,9 @@ export class RoleBackendController {
             .pipe(timeout(REQUEST_TIMEOUT));
     }
 
+    @ApiOperation({
+        summary: "Get roles of backend"
+    })
     @ApiFindAllResponse(EmptySuccessResponseDto)
     @HttpCode(HttpStatus.OK)
     @Post('roles/:backendId')
@@ -71,6 +81,10 @@ export class RoleBackendController {
             .pipe(timeout(REQUEST_TIMEOUT));
     }
 
+
+    @ApiOperation({
+        summary: "Detach Role backend"
+    })
     @ApiOkResponse({ type: EmptySuccessResponseDto })
     @HttpCode(HttpStatus.OK)
     @Delete(':id')

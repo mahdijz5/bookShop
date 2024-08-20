@@ -38,6 +38,10 @@ export class BookVersionController {
         private readonly packageClient: ClientProxy,
     ) { }
 
+
+    @ApiOperation({
+        summary : "Create bookVersion"
+    })
     @ApiCreatedResponse({ type: EmptySuccessResponseDto })
     @HttpCode(HttpStatus.CREATED)
     @Post()
@@ -50,6 +54,9 @@ export class BookVersionController {
     }
 
 
+    @ApiOperation({
+        summary : "findAll versions of book"
+    })
     @ApiOperation({ summary: "FindAll versions of book" })
     @ApiFindAllResponse(PaginationResDto)
     @HttpCode(HttpStatus.OK)
