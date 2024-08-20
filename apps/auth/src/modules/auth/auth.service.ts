@@ -136,16 +136,14 @@ export class AuthService {
             code,
         });
 
-        const forgotPasswordURL = this.configService.getOrThrow('FORGOT_PASSWORD_URL');
-        const token = `${forgotPasswordURL}${code}`;
         const expire = moment().add(VERIFICATION_TEMP_EXPIRE_TIME, 'seconds').toDate();
         this.mailClient.emit<void, mailDtos.EmailVerificationDto>('email-verification', {
             email,
             subject: 'Verify Forgot Password',
-            token,
+            token : code,
             expire,
         });
-        return { token, expire }
+         return { token: code, expire }
     }
 
     private async signToken(data: Record<string, string>) {
