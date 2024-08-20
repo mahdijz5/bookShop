@@ -31,7 +31,7 @@ export class IpgService {
 
 
   async getAllJsonFiles(): Promise<any[]> {
-    const pathDir = path.join(__dirname, '..', "..", "..", 'formats')
+    const pathDir = path.join(__dirname, '..', "..", "..","..","..","..","..", 'formats')
     const files = await fs.readdir(pathDir);
     const jsonFiles = files.filter(file => file.endsWith('.json'));
 

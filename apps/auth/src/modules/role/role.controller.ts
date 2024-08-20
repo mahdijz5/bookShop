@@ -21,6 +21,7 @@ export class RoleController {
         return await this.roleService.checkRoleBackend(
             checkRoleBackendDto.url,
             checkRoleBackendDto.routingsKey,
+            checkRoleBackendDto.method,
         );
     }
 
@@ -73,8 +74,9 @@ export class RoleController {
 
     @MessagePattern('add-role')
     async addRole(@Payload() addRoleRequestDto: AddRoleRequestDto) {
-        return await this.roleService.addRole(addRoleRequestDto.userId, addRoleRequestDto.roleId, addRoleRequestDto.idPostgres);
+        return await this.roleService.addRole(addRoleRequestDto.userId, addRoleRequestDto.roleId );
     }
  
- 
+    
+
 }

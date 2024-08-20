@@ -4,6 +4,7 @@ import { FindOneResponseDto } from '@app/common/dto/role/role';
 import { HandleError } from '@app/common/helpers';
 import { PaginationReqDto, PaginationResDto } from '@app/common/dto';
 import { BackendRepository } from './repositories';
+import { RouteMethod } from '@app/common';
  
 @Injectable()
 export class BackendService {
@@ -13,11 +14,12 @@ export class BackendService {
         private readonly backendRepository: BackendRepository
     ) { }
 
-    async create(name: string, routing: string): Promise<object> {
+    async create(name: string, routing: string,method:RouteMethod): Promise<object> {
         try {
             return await this.backendRepository.save({
                 name,
-                routing
+                routing,
+                method
             });
 
         } catch (error) {

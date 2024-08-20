@@ -45,7 +45,8 @@ export class BackendController {
         return this.authClient
             .send<void, CreateBackendDto>('backend.create', {
                 name: createRoleDto.name,
-                routing: createRoleDto.routing 
+                routing: createRoleDto.routing,
+                method: createRoleDto.method
                 
             })
             .pipe(timeout(REQUEST_TIMEOUT));

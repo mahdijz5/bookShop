@@ -58,6 +58,7 @@ import {
 import { ApiBadRequestResponseDto, EmptySuccessResponseDto, ObjectIdDto } from '../../common/dto';
 import { ERROR } from '@app/common';
 import { JwtDataInterface } from '../../common/interface';
+import { AddRoleRequestDto } from '@app/common/dto/role/role';
 
 @ApiTags('Auth')
 @ApiBadRequestResponse({ type: ApiBadRequestResponseDto })
@@ -228,6 +229,11 @@ export class AuthController {
     @HttpCode(HttpStatus.OK)
     @Post('add-role:id')
     addRole(@Param() objectIdDto: ObjectIdDto, @JWTData() jwtData: JwtDataInterface) {
-        // TODO
+        return this.authClient
+        .send<void, AddRoleRequestDto>('add-role', {
+            roleId: objectIdDto.id,
+            userId: jwtData.userId
+        })
+        .pipe(timeout(REQUEST_TIMEOUT));
     }
 }

@@ -14,7 +14,7 @@ export class OrderBook extends AbstractSchema {
     })
     orderId : Types.ObjectId
     
-    @Prop({
+    @Prop({ 
         type: SchemaTypes.ObjectId,
         required: true,
     })

@@ -19,6 +19,7 @@ import {
 import { ConfigService } from '@nestjs/config';
 import { lastValueFrom } from 'rxjs';
 import { CreateCartReqDto } from '@app/common/dto';
+import { RoleService } from '../role/role.service';
 
 @Injectable()
 export class AuthService {
@@ -33,6 +34,7 @@ export class AuthService {
         private readonly authRepository: AuthRepository,
         private readonly emailVerificationTempRepository: EmailVerificationTempRepository,
         private readonly resetPasswordTempRepository: ResetPasswordTempRepository,
+        private readonly roleService: RoleService
     ) { }
 
 
@@ -270,7 +272,7 @@ export class AuthService {
             auth.password = await hashPassword(password);
 
             await auth.save();
-
+            await this.roleService.setDefaultRole(auth._id)
             await lastValueFrom(this.packageClient.send("cart.create", <CreateCartReqDto>{ userId: auth._id + "" }))
             const loginRes = await this.login(username, password)
 
@@ -305,7 +307,7 @@ export class AuthService {
             }
 
             const token = await this.signToken({ userId: auth._id.toString() });
-            const roles = []
+            const roles = await this.roleService.getUserRoles(auth._id);
 
             return {
                 token,

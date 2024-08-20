@@ -1,4 +1,4 @@
-import { AbstractSchema } from '@app/common';
+import { AbstractSchema, RouteMethod } from '@app/common';
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { SchemaTypes } from 'mongoose';
 
@@ -9,7 +9,6 @@ import { SchemaTypes } from 'mongoose';
 })
 export class Backend extends AbstractSchema {
     @Prop({
-        unique: true,
         trim: true,
         required: true,
         type: SchemaTypes.String,
@@ -17,13 +16,19 @@ export class Backend extends AbstractSchema {
     name: string;
 
     @Prop({
-        trim: true,
+        trim: true, 
         required: true,
         type: SchemaTypes.String,
     })
     routing: string;
 
- 
+    @Prop({
+        required: true,
+        type: SchemaTypes.String,
+    })
+    method: RouteMethod;
+
+
 }
 
 export const BackendSchema = SchemaFactory.createForClass(Backend);

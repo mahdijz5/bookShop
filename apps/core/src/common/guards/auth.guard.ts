@@ -41,11 +41,16 @@ export class AuthGuard implements CanActivate {
             context.getClass(),
         ])
  
-        if (true) {
+        if (skipRole) {
             return true;
         }
-  
-        return true 
+
+        if (!jwtData.hasOwnProperty('routingsKey')) {
+            throw new BadRequestException(ERROR.JWT_IS_NOT_VALID);
+        }
+        await this.checkRole(jwtData['routingsKey'], context);
+
+        return true;
     }
 
     private getToken(context: ExecutionContext) {
@@ -70,6 +75,31 @@ export class AuthGuard implements CanActivate {
         );
         return jwtData;
     }
+    private async checkRole(routingsKey: string, context: ExecutionContext) {
+        const req = context.switchToHttp().getRequest<FastifyRequest>();
 
+        const method = req.routeOptions.method;
+        let url = req.routeOptions.url;
+        if (url.endsWith(':sid')) {
+            url = url.replace(':id', '');
+        }
+        const routing = url;
+        console.log(routing)
+        this.logger.debug(`ROUTING : ${routing}`);
+
+        await firstValueFrom(
+            this.authClient
+                .send('check-role-backend', {
+                    routingsKey,
+                    url: routing,
+                    method : method.toUpperCase()
+                })
+                .pipe(
+                    catchError(({ response }) => {
+                        throw new BadRequestException(response);
+                    }),
+                ),
+        );
+    }
  
 }

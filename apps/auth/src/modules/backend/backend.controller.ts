@@ -18,7 +18,8 @@ export class BackendController {
     async create(@Payload() createRequestDto: CreateRequestDto) {
         return await this.backendService.create(
             createRequestDto.name,
-            createRequestDto.routing 
+            createRequestDto.routing,
+            createRequestDto.method,
         );
     }
 

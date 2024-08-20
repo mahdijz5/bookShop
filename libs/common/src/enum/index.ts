@@ -5,4 +5,5 @@ export * from "./error.enum"
 export * from "./userStatus.enum"
 export * from "./requestStatus.enum"
 export * from "./orderStatus.enum"
+export * from "./routeMethod.enum"
  

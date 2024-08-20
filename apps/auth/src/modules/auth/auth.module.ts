@@ -21,6 +21,7 @@ import {
 import { RmqModule } from '@app/common/rmq';
 import { AuthController } from './auth.controller';
 import { DatabaseModule } from '@app/common';
+import { RoleModule } from '../role/role.module';
 
 @Module({
     imports: [
@@ -39,6 +40,7 @@ import { DatabaseModule } from '@app/common';
         ]),
         RmqModule.register([MAIL_SERVICE,PACKAGE_SERVICE]),
         CacheModule.register(),
+        RoleModule
     ],
     providers: [
         AuthService,

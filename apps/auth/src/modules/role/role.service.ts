@@ -9,11 +9,11 @@ import { CacheService } from '@app/common/cache';
 import { JwtService } from '@nestjs/jwt';
 import { PaginationReqDto, PaginationResDto } from '@app/common/dto';
 import { AuthRepository } from '../auth/repositories';
-import { ERROR } from '@app/common';
+import { ERROR, RouteMethod } from '@app/common';
 import { genRandomString } from '../../utils';
 import { BackendRepository } from '../backend/repositories';
 import { RoleBackendRepository } from '../role-backend/repositories';
-
+ 
 @Injectable()
 export class RoleService {
     private readonly logger: Logger = new Logger(RoleService.name);
@@ -27,18 +27,15 @@ export class RoleService {
         private readonly cacheService: CacheService,
 
     ) {
-
+       
     }
 
-    async checkRoleBackend(url: string, routingsKey: string) {
+    async checkRoleBackend(url: string, routingsKey: string,method : RouteMethod) {
         try {
             const routings = await this.cacheService.getArray(routingsKey);
             if (!routings || !routings.includes(url)) {
                 throw new BadRequestException(ERROR.ROUTE_ACCESS_DENIED);
             }
-
-
-
             return {};
         } catch (error) {
             new HandleError(error);
@@ -219,7 +216,7 @@ export class RoleService {
         }
     }
 
-    async addRole(userId, roleId, idPostgres) {
+    async addRole(userId, roleId) {
         try {
             const userRoles = await this.getUserRoles(userId);
             if (userRoles.length < 1) {
@@ -278,8 +275,7 @@ export class RoleService {
             new HandleError(error);
         }
     }
-
-
+ 
 
 
 }
