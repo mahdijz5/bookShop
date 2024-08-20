@@ -14,11 +14,12 @@
     "start:prod": "node dist/apps/micro-nestjs/main",
     "lint": "eslint \"{src,apps,libs,test}/**/*.ts\" --fix",
     "test": "jest",
-    "test:watch": "jest --watch",
+    "test:watch": "jest --watch", 
     "test:cov": "jest --coverage",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
-    "test:e2e": "jest --config ./apps/micro-nestjs/test/jest-e2e.json"
-  },
+    "test:e2e": "jest --config ./apps/micro-nestjs/test/jest-e2e.json",
+    "seed": "docker cp ./seed/ mongodb-primary:/data/ && docker exec mongodb-primary mongorestore --username root --password password123 --authenticationDatabase admin --noIndexRestore -v /data/seed && docker exec mongodb-primary rm -rf /data/seed/"
+  }, 
   "dependencies": {
     "@apollo/gateway": "^2.8.4",
     "@apollo/server": "^4.10.5",
@@ -75,7 +76,6 @@
     "ts-proto": "^1.181.1",
     "tsc-hooks": "^1.1.2",
     "nodemailer": "^6.9.14"
-
   },
   "devDependencies": {
     "@nestjs/cli": "^10.4.2",
