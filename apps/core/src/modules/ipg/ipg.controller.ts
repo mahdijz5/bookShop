@@ -23,7 +23,6 @@ export class IpgController {
     @HttpCode(HttpStatus.CREATED)
     @Post()
     create(@Body() createIpg: CreateIpgDto) {
-
         return this.ipgClient
             .send<void, CreateIpgReqDto>(MESSAGE_PATTERN.IPG.CREATE, {
                 ...createIpg

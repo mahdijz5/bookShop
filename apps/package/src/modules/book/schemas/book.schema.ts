@@ -1,6 +1,7 @@
 import { AbstractSchema } from '@app/common';
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { SchemaTypes } from 'mongoose';
+import { title } from 'process';
 
 
 @Schema({
@@ -34,4 +35,7 @@ export class Book extends AbstractSchema {
 
 }
 
-export const BookSchema = SchemaFactory.createForClass(Book);
+export const BookSchema = SchemaFactory.createForClass(Book).index(
+    {title : 1, author : 1},
+    {}
+)
